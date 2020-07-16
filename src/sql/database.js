@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const mysqlConnection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Mymalk4pon3!',
+    password: '!',
     database: 'todoapp'
 });
 mysqlConnection.connect(function (err) {
