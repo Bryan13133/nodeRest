@@ -1,23 +1,26 @@
 const express = require('express');
+
 const router = express.Router();
 const mysqlConnection = require('../sql/database');
 
+
 router.get('/users',(req,res)=>{
+    let result;
     mysqlConnection.query('select * from user',(err,rows,fields)=>{
         if (!err) {
             res.set('Access-Control-Allow-Origin', '*');
-             res.json(rows);
-            
+            result = res.json(rows);
         } else {
             console.log(err);
         }
     });
-    
+    return result;
 });
 
 router.post('/newUser',(req,res)=> {
-    console.log(req.body);
-    var user = JSON.parse(request.body);
+
+  
+    var user = req.body;
     const name = user.name;
     const lastName = user.lastName;
     const password = user.password;
@@ -25,15 +28,15 @@ router.post('/newUser',(req,res)=> {
     const phoneNumber = user.phoneNumber;
     const birthDate = user.birthDate;
     const termsConditions = user.termsAndConditions;
-    const sql = "INSERT INTO user (Name, LastName,Password,Email,PhoneNumber,BirthDate,TermsConditions) VALUES ?";
-    const values = [[name, lastName,password,email,phoneNumber,birthDate,termsConditions]];
-    mysqlConnection.query(sql,[values],(err,rows,fields)=>{
+    const sql = "call spInsertUser (?,?,?,?,?,?,?)";
+  
+    mysqlConnection.query(sql,[name, lastName,password,email,phoneNumber,birthDate,termsConditions],(err,rows,fields)=>{
         if (!err) {
             console.log(true);
             res.set('Access-Control-Allow-Origin', '*');
              res.json(true);
         } else {
-            console.log(false);
+            console.log(err);
             res.set('Access-Control-Allow-Origin', '*');
             res.json(false);
         }
